@@ -23,4 +23,22 @@ proptest <- prop.test(x = c(p1, p2), n = c(p1, p2), p = p0, alternative = c("two
     print("Warning! Normal distribution should not be assumed")
   }
 prop.test
+#I'm having a hard time adding "greater" and "less" to my alternative argument
+
+```
+
+```{r 2, include=TRUE}
+data <- read.csv("KamilarAndCooperData.csv")
+data
+model_longevity <- lm(data = data, MaxLongevity_m ~ Brain_Size_Species_Mean)
+model_longevity
+library(ggplot2)
+plot(model_longevity)
+```
+
+```{r 3, include=TRUE}
+model_logs <- lm(data = data, log(MaxLongevity_m) ~ log(Brain_Size_Species_Mean))
+model_logs
+library(ggplot2)
+plot(model_logs)
 ```
