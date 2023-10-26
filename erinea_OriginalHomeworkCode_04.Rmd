@@ -44,15 +44,28 @@ g <- g + geom_point()
 g <- g + geom_smooth(method = "lm", formula = y ~ x)
 g
 ```
-
-```{r 3, include=TRUE}
-model_logs <- lm(data = data, log(MaxLongevity_m) ~ log(Brain_Size_Species_Mean))
-model_logs
-library(ggplot2)
-plot(model_logs)
-```
+I'm not sure how to append this using geom_text()
 
 ```{r 4, include=TRUE}
+beta1 <- cor(longevity, brain_size) * (sd(brain_size)/sd(brain_size))
+beta1
+```
+I don't know why this gives me an NA result
+
+```{r 5, include=TRUE}
+slope.test <- function(beta1) {
+    g <- ggplot(data = data, aes(x = longevity, y = brain_size))
+    g <- g + geom_point()
+    g <- g + geom_abline(intercept = 0, slope = beta1, size = 1, colour = "blue",
+        alpha = 1/2)
+    ols <- sum((y - beta1 * x)^2)
+    g <- g + ggtitle(paste("Slope = ", beta1, "\nSum of Squared Deviations = ",
+        round(ols, 3)))
+    g
+}
+```
+
+```{r 6, include=TRUE}
 z.prop.test <- function (x, y = NULL, alternative = "two.sided", mu = 0, sigma.x = NULL, 
     sigma.y = NULL, conf.level = 0.95) 
 {
@@ -132,6 +145,9 @@ z.prop.test <- function (x, y = NULL, alternative = "two.sided", mu = 0, sigma.x
     return(rval)
 }
 ```
-
-```{r 5, include=TRUE}
-z.prop.test()
+I have no clue if this is correct
+```{r 7, include=TRUE}
+z.prop.test(x = c(p1, p2), y = NULL, alternative = "two.sided", mu = 0, sigma.x = NULL, 
+    sigma.y = NULL, conf.level = 0.95)
+```
+This is confusing
