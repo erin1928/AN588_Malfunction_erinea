@@ -19,52 +19,7 @@ p0 <- 0.75 #random
 data.frame <- rnorm(100, mean = 50, sd = 5)
 data.frame.2 <- rnorm(50, mean = 10, sd = 1)
 ```
-Question 2:
-```{r 2, include=TRUE}
-data <- read.csv("KamilarAndCooperData.csv", sep = ",", header = TRUE, stringsAsFactors = FALSE)
-data
-longevity <- data$MaxLongevity_m
-brain_size <- data$Brain_Size_Species_Mean
-y <- brain_size - mean(brain_size)
-x <- longevity - mean(longevity)
-z <- data.frame(cbind(x, y))
-g <- ggplot(data = data, aes(x = longevity, y = brain_size))
-g <- g + geom_point()
-g <- g + geom_smooth(method = "lm", formula = y ~ x)
-g
-```
-```{r 3, include=TRUE}
-data
-longevity <- data$MaxLongevity_m
-brain_size <- data$Brain_Size_Species_Mean
-log.longevity <- log(longevity)
-log.brain.size <- log(brain_size)
-g <- ggplot(data = data, aes(x = log.longevity, y = log.brain.size))
-g <- g + geom_point()
-g <- g + geom_smooth(method = "lm", formula = y ~ x)
-g
-```
-I need to add CIs but I'm having some trouble with that.
-I'm not sure how to append this using geom_text()
-
-```{r 4, include=TRUE}
-beta1 <- cor(longevity, brain_size) * (sd(brain_size)/sd(brain_size))
-beta1
-```
-I don't know why this gives me an NA result
-
-```{r 5, include=TRUE}
-slope.test <- function(beta1) {
-    g <- ggplot(data = data, aes(x = longevity, y = brain_size))
-    g <- g + geom_point()
-    g <- g + geom_abline(intercept = 0, slope = beta1, size = 1, colour = "blue",
-        alpha = 1/2)
-    ols <- sum((y - beta1 * x)^2)
-    g <- g + ggtitle(paste("Slope = ", beta1, "\nSum of Squared Deviations = ",
-        round(ols, 3)))
-    g
-}
-```
+I tried to make a data frame but I don't know if this is neceassary.
 
 Question 1:
 ```{r 6, include=TRUE}
@@ -147,9 +102,75 @@ z.prop.test <- function (x, y = NULL, alternative = "two.sided", mu = 0, sigma.x
     return(rval)
 }
 ```
-I have no clue if this is correct, also I'm not sure how to input the warning
+I have no clue if this is correct/what parts of this code are necessary, also I'm not sure where to input the warning
 ```{r 7, include=TRUE}
 z.prop.test(x = c(p1, p2), y = NULL, alternative = "two.sided", mu = 0, sigma.x = NULL, 
     sigma.y = NULL, conf.level = 0.95)
 ```
 This is confusing
+
+Question 2:
+Loading csv into R and calling the necessary columns.
+```{r 2, include=TRUE}
+data <- read.csv("KamilarAndCooperData.csv", sep = ",", header = TRUE, stringsAsFactors = FALSE) #importing the csv
+data
+longevity <- data$MaxLongevity_m #calling the column
+brain_size <- data$Brain_Size_Species_Mean
+y <- brain_size - mean(brain_size) #assigning our function to a variable per the module
+x <- longevity - mean(longevity)
+z <- data.frame(cbind(x, y)) #now creating the dataframe
+g <- ggplot(data = data, aes(x = longevity, y = brain_size)) #creating the graph
+g <- g + geom_point()
+g <- g + geom_smooth(method = "lm", formula = y ~ x)
+g
+```
+I'm stuck on inputting the equation into the line. Suggestions?
+
+Okay here again we are going to make another plot using the same method, but treating our varaibles with the log function in order to plot the logs of each data set.
+```{r 3, include=TRUE}
+data
+longevity <- data$MaxLongevity_m
+brain_size <- data$Brain_Size_Species_Mean
+log.longevity <- log(longevity)
+log.brain.size <- log(brain_size)
+m <- lm(data = data, longevity ~ brain_size)
+ci <- predict(m, newdata = data.frame(longevity = data$longevity), interval = "confidence",
+    level = 0.95) #making a 95% CI
+ci
+df <- cbind(x, ci) #binding our x value with CI
+names(df) <- c("x", "y", "yhat", "CIfit", "CIlwr", "CIupr")
+head(df)
+library(ggplot2) 
+g <- ggplot(data = data, aes(x = log.longevity, y = log.brain.size))
+g <- g + geom_point()
+g <- g + geom_line(aes(x = log.longevity, y = CIfit), colour = "black") #This is from module 12 but it's not working
+g <- g + geom_line(aes(x = log.longevity, y = CIlwr), colour = "blue")
+g <- g + geom_line(aes(x = log.longevity, y = CIupr), colour = "blue")
+g <- g + geom_smooth(method = "lm", formula = y ~ x)
+g
+
+
+```
+
+I need to add CIs but I'm having some trouble with that.
+I'm not sure how to append this using geom_text()
+
+```{r 4, include=TRUE}
+beta1 <- cor(longevity, brain_size) * (sd(brain_size)/sd(brain_size))
+beta1
+```
+I don't know why this gives me an NA result
+
+```{r 5, include=TRUE}
+slope.test <- function(beta1) {
+    g <- ggplot(data = data, aes(x = longevity, y = brain_size))
+    g <- g + geom_point()
+    g <- g + geom_abline(intercept = 0, slope = beta1, size = 1, colour = "blue",
+        alpha = 1/2)
+    ols <- sum((y - beta1 * x)^2)
+    g <- g + ggtitle(paste("Slope = ", beta1, "\nSum of Squared Deviations = ",
+        round(ols, 3)))
+    g
+}
+```
+
