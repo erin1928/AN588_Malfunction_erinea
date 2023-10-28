@@ -14,9 +14,7 @@ Challenges:
 
 [2] I am having difficulty with the confidence intervals. I was using the code from Module 12, but it's not running effectively when I try and input it into my figure. I'm not sure what exactly is leading to this problem and could use any and all help and suggestions.
 
-[3] I can't figure out how to add the equation for my line into gg plot. I was again using the code from Module 12, but having difficulty modifying the code to effectively include this.
-
-[4] The beta test is also giving me a lot of difficulty. My code is returning an NA result and I'm not really sure why or how to interperet this. 
+[3] The beta test is also giving me a lot of difficulty. My code is returning an NA result and I'm not really sure why or how to interperet this. 
 
 ---
 
