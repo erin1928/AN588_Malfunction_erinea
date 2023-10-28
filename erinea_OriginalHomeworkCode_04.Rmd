@@ -120,6 +120,7 @@ z.prop.test(x = c(p1, p2), y = NULL, alternative = "two.sided", mu = 0, sigma.x 
 This is confusing
 
 Question 2:
+
 Loading csv into R and calling the necessary columns.
 ```{r 4, include=TRUE}
 data <- read.csv("KamilarAndCooperData.csv", sep = ",", header = TRUE, stringsAsFactors = FALSE) #importing the csv
