@@ -8,6 +8,16 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+Challenges: 
+
+[1] I had a lot of trouble understanding the prop.test code. There was a lot of information within the test code and I am having a very hard time discerning what all of it means/how it all fits together, as well as picking apart which parts of the code I need to work with and which parts I can discard.
+
+[2] I am having difficulty with the confidence intervals. I was using the code from Module 12, but it's not running effectively when I try and input it into my figure. I'm not sure what exactly is leading to this problem and could use any and all help and suggestions.
+
+[3] I can't figure out how to add the equation for my line into gg plot. I was again using the code from Module 12, but having difficulty modifying the code to effectively include this.
+
+[4] The beta test is also giving me a lot of difficulty. My code is returning an NA result and I'm not really sure why or how to interperet this. 
+
 [1] Write a simple R function, Z.prop.test(), that can perform one- or two-sample Z-tests for proportion data, using the following guidelines:
 
 ```{r 1, include=TRUE}
@@ -19,7 +29,7 @@ p0 <- 0.75 #random
 data.frame <- rnorm(100, mean = 50, sd = 5)
 data.frame.2 <- rnorm(50, mean = 10, sd = 1)
 ```
-I tried to make a data frame but I don't know if this is neceassary.
+I tried to make a data frame but I don't know if this is necessary/how I would use this to test my z.prop test. Also, I'm not sure what the difference between one and two sample test is, and how to incorporate it into my code or if I need seperate tests to do that.
 
 Question 1:
 ```{r 6, include=TRUE}
