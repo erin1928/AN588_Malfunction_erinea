@@ -34,7 +34,7 @@ data.frame.2 <- rnorm(50, mean = 10, sd = 1)
 I tried to make a data frame but I don't know if this is necessary/how I would use this to test my z.prop test. Also, I'm not sure what the difference between one and two sample test is, and how to incorporate it into my code or if I need seperate tests to do that.
 
 Question 1:
-```{r 6, include=TRUE}
+```{r 2, include=TRUE}
 z.prop.test <- function (x, y = NULL, alternative = "two.sided", mu = 0, sigma.x = NULL, 
     sigma.y = NULL, conf.level = 0.95) 
 {
@@ -115,7 +115,7 @@ z.prop.test <- function (x, y = NULL, alternative = "two.sided", mu = 0, sigma.x
 }
 ```
 I have no clue if this is correct/what parts of this code are necessary, also I'm not sure where to input the warning
-```{r 7, include=TRUE}
+```{r 3, include=TRUE}
 z.prop.test(x = c(p1, p2), y = NULL, alternative = "two.sided", mu = 0, sigma.x = NULL, 
     sigma.y = NULL, conf.level = 0.95)
 ```
@@ -123,7 +123,7 @@ This is confusing
 
 Question 2:
 Loading csv into R and calling the necessary columns.
-```{r 2, include=TRUE}
+```{r 4, include=TRUE}
 data <- read.csv("KamilarAndCooperData.csv", sep = ",", header = TRUE, stringsAsFactors = FALSE) #importing the csv
 data
 longevity <- data$MaxLongevity_m #calling the column
@@ -150,7 +150,7 @@ g
 I'm stuck on inputting the equation into the line. Suggestions?
 
 Okay here again we are going to make another plot using the same method, but treating our varaibles with the log function in order to plot the logs of each data set.
-```{r 3, include=TRUE}
+```{r 5, include=TRUE}
 data
 longevity <- data$MaxLongevity_m
 brain_size <- data$Brain_Size_Species_Mean
@@ -174,7 +174,7 @@ g
 
 ```
 
-```{r 3, include=TRUE}
+```{r 6, include=TRUE}
 my_coef <- coef(m)            # Extract coefficients of model
 my_coef 
 my_equation <- paste("y =",        # Extract equation of model
@@ -189,13 +189,13 @@ my_equation                        # Print equation of model
 I need to add CIs but I'm having some trouble with that.
 I'm not sure how to append this using geom_text()
 
-```{r 4, include=TRUE}
+```{r 7, include=TRUE}
 beta1 <- cor(longevity, brain_size) * (sd(brain_size)/sd(brain_size))
 beta1
 ```
 I don't know why this gives me an NA result
 
-```{r 5, include=TRUE}
+```{r 8, include=TRUE}
 slope.test <- function(beta1) {
     g <- ggplot(data = data, aes(x = longevity, y = brain_size))
     g <- g + geom_point()
