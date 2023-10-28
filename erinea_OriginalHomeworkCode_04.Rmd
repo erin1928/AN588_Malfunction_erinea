@@ -18,6 +18,8 @@ Challenges:
 
 [4] The beta test is also giving me a lot of difficulty. My code is returning an NA result and I'm not really sure why or how to interperet this. 
 
+---
+
 [1] Write a simple R function, Z.prop.test(), that can perform one- or two-sample Z-tests for proportion data, using the following guidelines:
 
 ```{r 1, include=TRUE}
