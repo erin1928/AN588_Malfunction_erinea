@@ -194,6 +194,7 @@ beta1
 I don't know why this gives me an NA result
 
 ```{r 8, include=TRUE}
+library(ggplot2)
 slope.test <- function(beta1) {
     g <- ggplot(data = data, aes(x = longevity, y = brain_size))
     g <- g + geom_point()
@@ -204,5 +205,6 @@ slope.test <- function(beta1) {
         round(ols, 3)))
     g
 }
+slope.test(my_equation)
 ```
 
