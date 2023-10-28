@@ -128,12 +128,23 @@ data <- read.csv("KamilarAndCooperData.csv", sep = ",", header = TRUE, stringsAs
 data
 longevity <- data$MaxLongevity_m #calling the column
 brain_size <- data$Brain_Size_Species_Mean
+my_coef <- coef(m)            # Extract coefficients of model
+my_coef 
+my_equation <- paste("y =",        # Extract equation of model
+                     coef(m)[[1]],
+                     "+",
+                     coef(m)[[2]],
+                     "* x")
+my_equation 
+library(ggplot2)
+library(ggpubr)
 y <- brain_size - mean(brain_size) #assigning our function to a variable per the module
 x <- longevity - mean(longevity)
 z <- data.frame(cbind(x, y)) #now creating the dataframe
 g <- ggplot(data = data, aes(x = longevity, y = brain_size)) #creating the graph
 g <- g + geom_point()
-g <- g + geom_smooth(method = "lm", formula = y ~ x)
+g <- g + geom_smooth(method = "lm", formula = y ~ x) + stat_regline_equation(label.x=30, label.y=310) + stat_cor(aes(label=..rr.label..), label.x=30, label.y=290)
+
 g
 ```
 I'm stuck on inputting the equation into the line. Suggestions?
@@ -161,6 +172,17 @@ g <- g + geom_line(aes(x = log.longevity, y = CIupr), colour = "blue")
 g <- g + geom_smooth(method = "lm", formula = y ~ x)
 g
 
+```
+
+```{r 3, include=TRUE}
+my_coef <- coef(m)            # Extract coefficients of model
+my_coef 
+my_equation <- paste("y =",        # Extract equation of model
+                     coef(m)[[1]],
+                     "+",
+                     coef(m)[[2]],
+                     "* x")
+my_equation                        # Print equation of model
 
 ```
 
