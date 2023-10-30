@@ -150,9 +150,6 @@ g
 
 Okay here again we are going to make another plot using the same method, but treating our variables with the log function in order to plot the logs of each data set.
 ```{r 5, include=TRUE}
-data
-longevity <- data$MaxLongevity_m
-brain_size <- data$Brain_Size_Species_Mean
 log_longevity <- log(longevity)
 log_brain_size <- log(brain_size)
 m <- lm(data = data, log_longevity ~ log_brain_size)
