@@ -1,0 +1,237 @@
+---
+title: "erinea_PeerCommentary_reesehs_04"
+author: "Reese Hotten-Somers"
+date: "2023-10-30"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Challenges: 
+
+[1] I had a lot of trouble understanding the prop.test code. There was a lot of information within the test code and I am having a very hard time discerning what all of it means/how it all fits together, as well as picking apart which parts of the code I need to work with and which parts I can discard.
+
+[2] I am having difficulty with the confidence intervals. I was using the code from Module 12, but it's not running effectively when I try and input it into my figure. I'm not sure what exactly is leading to this problem and could use any and all help and suggestions.
+
+[3] The beta test is also giving me a lot of difficulty. My code is returning an NA result and I'm not really sure why or how to interperet this. 
+
+#reesehs: just letting you know that you're document doesn't knit! Which is totally fine, just wanted to let you know! Also great job!!! :))
+---
+
+[1] Write a simple R function, Z.prop.test(), that can perform one- or two-sample Z-tests for proportion data, using the following guidelines:
+
+```{r 1, include=TRUE}
+p1 <- 0.5 #random
+n1 <- 100 #random
+p2 <- NULL
+n2 <- NULL
+p0 <- 0.75 #random
+data.frame <- rnorm(100, mean = 50, sd = 5)
+data.frame.2 <- rnorm(50, mean = 10, sd = 1)
+
+#reesehs: this is just what I did, but I think that all of these are meant to go into the parameters of the function, basically inside the paratheses. 
+```
+I tried to make a data frame but I don't know if this is necessary/how I would use this to test my z.prop test. Also, I'm not sure what the difference between one and two sample test is, and how to incorporate it into my code or if I need seperate tests to do that.
+
+Question 1:
+```{r 2, include=TRUE}
+z.prop.test <- function (x, y = NULL, alternative = "two.sided", mu = 0, sigma.x = NULL, 
+    sigma.y = NULL, conf.level = 0.95) 
+{
+    choices <- c("two.sided", "greater", "less")
+    alt <- pmatch(alternative, choices)
+    alternative <- choices[alt]
+    if (length(alternative) > 1 || is.na(alternative)) 
+        stop("alternative must be one \"greater\", \"less\", \"two.sided\"")
+    if (!missing(mu)) 
+        if (length(mu) != 1 || is.na(mu)) 
+            stop("mu must be a single number")
+    if (is.null(sigma.x) && !is.null(x) && is.null(y)) 
+        stop("You must enter the value for sigma.x")
+    if (!is.null(y) && is.null(sigma.y) || is.null(sigma.x)) 
+        stop("You must enter values for both sigma.x and sigma.y")
+    if (!missing(conf.level)) 
+        if (length(conf.level) != 1 || is.na(conf.level) || conf.level < 
+            0 || conf.level > 1) 
+            stop("conf.level must be a number between 0 and 1")
+    if (!is.null(y)) {
+        dname <- paste(deparse(substitute(x)), "and", paste(deparse(substitute(y))))
+    }
+    #reesehs: I really like all the logical functions that you are using! This is a really cool way to think about it!
+    else {
+        dname <- deparse(substitute(x))
+    }
+    xok <- !is.na(x)
+    x <- x[xok]
+    nx <- length(x)
+    if (nx <= 2) 
+        stop("not enough x observations")
+    mx <- mean(x)
+    estimate <- mx
+    if (is.null(y)) {
+        stderr <- sigma.x/sqrt(nx)
+        zobs <- (mx - mu)/stderr
+        method <- c("One-sample z-Test")
+        names(estimate) <- c("mean of x")
+    }
+    else {
+        yok <- !is.na(y)
+        y <- y[yok]
+        ny <- length(y)
+        if (ny <= 2) 
+            stop("not enough y observations")
+        my <- mean(y)
+        method <- c("Two-sample z-Test")
+        estimate <- c(mx, my)
+        names(estimate) <- c("mean of x", "mean of y")
+        stderr <- sqrt(((sigma.x^2)/nx) + ((sigma.y^2)/ny))
+        zobs <- (mx - my - mu)/stderr
+    }
+    if (alternative == "less") {
+        pval <- pnorm(zobs)
+        cint <- c(NA, zobs * stderr + qnorm(conf.level) * stderr)
+    }
+    else if (alternative == "greater") {
+        pval <- 1 - pnorm(zobs)
+        cint <- c(zobs * stderr - qnorm(conf.level) * stderr, 
+            NA)
+    }
+    else {
+        pval <- 2 * pnorm(-abs(zobs))
+        alpha <- 1 - conf.level
+        cint <- c(zobs * stderr - qnorm((1 - alpha/2)) * stderr, 
+            zobs * stderr + qnorm((1 - alpha/2)) * stderr)
+    }
+    cint <- cint + mu
+    names(zobs) <- "z"
+    if (!is.null(y)) 
+        names(mu) <- "difference in means"
+    else names(mu) <- "mean"
+    attr(cint, "conf.level") <- conf.level
+    rval <- list(statistic = zobs, p.value = pval, conf.int = cint, 
+        estimate = estimate, null.value = mu, alternative = alternative, 
+        method = method, data.name = dname)
+    attr(rval, "class") <- "htest"
+    return(rval)
+}
+```
+I have no clue if this is correct/what parts of this code are necessary, also I'm not sure where to input the warning
+
+#reesehs: Ok, I think I'm just as confused as you are on this assignment. I think some of the code is not neccesarry in there, but I think I'm a little unclear on what certain things do. I think that you are using equations using y and other variables and I think it might be better if you tried to incorperate the given varaible? What I found helpful is lookin up their definitions on the internet and comparing them to the language used around the defitions of the stat equations in the modules. That way I was able to figure out that most of the equations can be done with mostly p1, p0 and n1. However, if you way works, then keep on doing what you're doing because it seems really cool and advanced!
+```{r 3, include=TRUE}
+z.prop.test(x = c(p1, p2), y = NULL, alternative = "two.sided", mu = 0, sigma.x = NULL, 
+    sigma.y = NULL, conf.level = 0.95)
+```
+This is confusing
+
+Question 2:
+
+Loading csv into R and calling the necessary columns.
+```{r 4, include=TRUE}
+data <- read.csv("KamilarAndCooperData.csv", sep = ",", header = TRUE, stringsAsFactors = FALSE) #importing the csv
+data
+longevity <- data$MaxLongevity_m #calling the column
+brain_size <- data$Brain_Size_Species_Mean
+my_coef <- coef(m)            # Extract coefficients of model
+my_coef 
+my_equation <- paste("y =",        # Extract equation of model
+                     coef(m)[[1]],
+                     "+",
+                     coef(m)[[2]],
+                     "* x")
+
+#reesehs: this is a really interesting way of doing it. However, when I ran it it seemed that m didn't exist yet? Is m supposed to be the result of a lm() function? Is the equation of the model supposed to add a linear regression model? It might be better to just use the lm() function to fit the linear model? 
+my_equation 
+library(ggplot2)
+library(ggpubr)
+y <- brain_size - mean(brain_size) #assigning our function to a variable per the module
+x <- longevity - mean(longevity)
+z <- data.frame(cbind(x, y)) #now creating the dataframe
+g <- ggplot(data = data, aes(x = longevity, y = brain_size)) #creating the graph
+g <- g + geom_point()
+g <- g + geom_smooth(method = "lm", formula = y ~ x) + stat_regline_equation(label.x=30, label.y=310) + stat_cor(aes(label=..rr.label..), label.x=30, label.y=290)
+
+g
+#reesehs: looks great!! I really liked the CI shaft and legend with the equation and r squared value!
+```
+I'm stuck on inputting the equation into the line. Suggestions?
+#reesehs: When I looked at the graph the line was already fitted to the data. In the geom_smooth() function the method 'lm' means that it is taking the data and fitting a linear model to it without having to use your equation. 
+
+Okay here again we are going to make another plot using the same method, but treating our varaibles with the log function in order to plot the logs of each data set.
+```{r 5, include=TRUE}
+data
+longevity <- data$MaxLongevity_m
+brain_size <- data$Brain_Size_Species_Mean
+
+#reesehs: variables carry over from different chunks, so it's not necessary to restate them unless you are changing something about them! If you are wondering what they consist of and if you've changed them at all you can always go the window in the top right hand corner of your screen and click on the environment tab which will tell you all the variables within your project environment and what they are, which is super cool!
+log.longevity <- log(longevity)
+log.brain.size <- log(brain_size)
+m <- lm(data = data, longevity ~ brain_size)
+
+#reesehs: By using longevity and brainsize as the variable I think that you are fitting a linear model to the non long data. Do you think you could use this above and then do the same here but using the new log variables you just created? 
+
+ci <- predict(m, newdata = data.frame(longevity = data$longevity), interval = "confidence",
+    level = 0.95) #making a 95% CI
+ci
+#reesehs: make sure you are testing for 90 percent! Also make sure you use log(data$Brain_Size_Species_Mean) in order to get the log of the data! 
+
+#reesehs: if you want to bind the x value data you might want to rename log.brain.size to x in order to bind it to the dataframe! Otherwise no values are assigned to x
+
+df <- cbind(x, ci) #binding our x value with CI
+names(df) <- c("x", "y", "yhat", "CIfit", "CIlwr", "CIupr")
+head(df)
+library(ggplot2) 
+g <- ggplot(data = data, aes(x = log.longevity, y = log.brain.size))
+
+g <- ggplot(data = data, aes(x = log.brain.size, y = log.longevity))
+g <- g + geom_point()
+g <- g + geom_line(aes(x = log.longevity, y = CIfit), colour = "black") #This is from module 12 but it's not working
+g <- g + geom_line(aes(x = log.longevity, y = CIlwr), colour = "blue")
+g <- g + geom_line(aes(x = log.longevity, y = CIupr), colour = "blue")
+g <- g + geom_smooth(method = "lm", formula = y ~ x)
+g
+#reesehs: ok, so I spent about 20 minutes playing around with your code and I did manage to make it work, sort of. Basically you are assigning CIfit values to the yhat values in your dataframe. Also, df is a matrix at the current moment. So what I would suggest, and I am sure there are a mirad of ways to do so. First, create a dataframe caled df and also assign log.longevity to y and log.brain.size to x instead of the normal names. Then you can bind x, y and ci to your dataframe while getting rid of the 'yhat' colmn name since it's not really needed in your calculations right now. Also, in your ggplot make sure your data is set to your data frame f and x =x and y=y. Then it should give you something! However, I think that your scale is off so all the points are at the very bottom. I don't completely understand why? Maybe ask professor schmitt or one of the grad students!
+```
+
+```{r 6, include=TRUE}
+my_coef <- coef(m)            # Extract coefficients of model
+my_coef 
+my_equation <- paste("y =",        # Extract equation of model
+                     coef(m)[[1]],
+                     "+",
+                     coef(m)[[2]],
+                     "* x")
+my_equation                        # Print equation of model
+
+```
+
+I need to add CIs but I'm having some trouble with that.
+#cis you already did above! But if you want to Ci of the whole model you can use the equation ci <- confint(nl, level = 0.90) where nl is the name of your lm() model!
+I'm not sure how to append this using geom_text()
+
+```{r 7, include=TRUE}
+beta1 <- cor(longevity, brain_size) * (sd(brain_size)/sd(brain_size))
+beta1
+#basically in the data some of the rows are left empty because there were no data inputs. You can get rid of the na using na.rm = TRUE in the sd function and use = "complete.obs" in the cor function! I really threw me off too! I had to do some digging in good old google to figure it out!
+```
+I don't know why this gives me an NA result
+
+```{r 8, include=TRUE}
+library(ggplot2)
+slope.test <- function(beta1) {
+    g <- ggplot(data = data, aes(x = longevity, y = brain_size))
+    g <- g + geom_point()
+    g <- g + geom_abline(intercept = 0, slope = beta1, size = 1, colour = "blue",
+        alpha = 1/2)
+    ols <- sum((y - beta1 * x)^2)
+    g <- g + ggtitle(paste("Slope = ", beta1, "\nSum of Squared Deviations = ",
+        round(ols, 3)))
+    g
+}
+slope.test(my_equation)
+
+#reesehs: I'm a little confused on what this is for? Otherwise I might be able to help but right not it doesn't seem to work? Let me know if I can help at all with this!
+```
+
