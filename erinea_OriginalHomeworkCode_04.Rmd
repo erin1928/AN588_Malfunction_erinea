@@ -173,19 +173,6 @@ g
 
 ```
 
-```{r 6, include=TRUE}
-my_coef <- coef(m)            # Extract coefficients of model
-my_coef 
-my_equation <- paste("y =",        # Extract equation of model
-                     coef(m)[[1]],
-                     "+",
-                     coef(m)[[2]],
-                     "* x")
-my_equation                        # Print equation of model
-
-```
-
-I need to add CIs but I'm having some trouble with that.
 I'm not sure how to append this using geom_text()
 
 ```{r 7, include=TRUE}
