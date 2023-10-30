@@ -153,9 +153,9 @@ Okay here again we are going to make another plot using the same method, but tre
 data
 longevity <- data$MaxLongevity_m
 brain_size <- data$Brain_Size_Species_Mean
-log.longevity <- log(longevity)
-log.brain.size <- log(brain_size)
-m <- lm(data = data, longevity ~ brain_size)
+log_longevity <- log(longevity)
+log_brain_size <- log(brain_size)
+m <- lm(data = data, log_longevity ~ log_brain_size)
 ci <- predict(m, newdata = data.frame(longevity = data$longevity), interval = "confidence",
     level = 0.95) #making a 95% CI
 ci
@@ -163,11 +163,8 @@ df <- cbind(x, ci) #binding our x value with CI
 names(df) <- c("x", "y", "yhat", "CIfit", "CIlwr", "CIupr")
 head(df)
 library(ggplot2) 
-g <- ggplot(data = data, aes(x = log.longevity, y = log.brain.size))
+g <- ggplot(data = data, aes(x = log_longevity, y = log_brain_size))
 g <- g + geom_point()
-g <- g + geom_line(aes(x = log.longevity, y = CIfit), colour = "black") #This is from module 12 but it's not working
-g <- g + geom_line(aes(x = log.longevity, y = CIlwr), colour = "blue")
-g <- g + geom_line(aes(x = log.longevity, y = CIupr), colour = "blue")
 g <- g + geom_smooth(method = "lm", formula = y ~ x)
 g
 
