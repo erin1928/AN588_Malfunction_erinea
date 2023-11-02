@@ -10,11 +10,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 Challenges: 
 
-[1] I had a lot of trouble understanding the prop.test code. There was a lot of information within the test code and I am having a very hard time discerning what all of it means/how it all fits together, as well as picking apart which parts of the code I need to work with and which parts I can discard.
+[1] I had a lot of trouble understanding the prop.test code. There was a lot of information within the test code and I am having a very hard time discerning what all of it means/how it all fits together, as well as picking apart which parts of the code I need to work with and which parts I can discard. My peers were also confused by this assignment and none of us were really able to crack it.
 
-[2] I am having difficulty with the confidence intervals. I was using the code from Module 12, but it's not running effectively when I try and input it into my figure. I'm not sure what exactly is leading to this problem and could use any and all help and suggestions.
+[2] I am having difficulty with the confidence intervals. I was using the code from Module 12, but it's not running effectively when I try and input it into my figure. I'm not sure what exactly is leading to this problem and could use any and all help and suggestions. I also still had issues with this, my code from Module 12 wasn't synthesizing very well and I'm not sure why it wasn't running properly.
 
-[3] The beta test is also giving me a lot of difficulty. My code is returning an NA result and I'm not really sure why or how to interperet this. 
+[3] The beta test is also giving me a lot of difficulty. My code is returning an NA result and I'm not really sure why or how to interpret this. Reese told me it was because there were non-numeric variables in the table, but I was having a lot of trouble working with the code to make print a character or vector. 
+
+[4] Overall I think my peers and I struggled with this assignment. I appreciated the feedback and encouragment but I still really struggled with the tasks at hand. I tried my best both through the modules and online, and feel like I better understand ggplot because of it. I am going to go back through the answer key and see if I can work through it after being given some guidance.
 
 ---
 
