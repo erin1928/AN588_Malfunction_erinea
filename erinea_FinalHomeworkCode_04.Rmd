@@ -18,7 +18,7 @@ Challenges:
 
 [1] I had a lot of trouble understanding the prop.test code. There was a lot of information within the test code and I am having a very hard time discerning what all of it means/how it all fits together, as well as picking apart which parts of the code I need to work with and which parts I can discard. My peers were also confused by this assignment and none of us were really able to crack it. I was able to include some warnings and clean up the top of my function a little bit but am still very confused as to what each part of the function is doing and how to manipulate it to work best for us.
 
-[2] I am having difficulty with the confidence intervals. I was using the code from Module 12, but it's not running effectively when I try and input it into my figure. I'm not sure what exactly is leading to this problem and could use any and all help and suggestions. I also still had issues with this, my code from Module 12 wasn't synthesizing very well and I'm not sure why it wasn't running properly. Reese helped me a lot with this and their comments were very kind and useful. However, I am still stuck. I can't get it to run properly even after removing yhat and creating df as a data frame instead of a matrix. I think I may just not be understanding something important and could use a little guidance onto where I am going astray.
+[2] I am having difficulty with the confidence intervals. I was using the code from Module 12, but it's not running effectively when I try and input it into my figure. I'm not sure what exactly is leading to this problem and could use any and all help and suggestions. I also still had issues with this, my code from Module 12 wasn't synthesizing very well and I'm not sure why it wasn't running properly. Reese helped me a lot with this and their comments were very kind and useful. After a lot of playing around with what does and doesn't work I was able to get some semblence of a graph with CIs. Thank you Reese!!
 
 [3] The beta test is also giving me a lot of difficulty. My code is returning an NA result and I'm not really sure why or how to interpret this. Reese told me it was because there were non-numeric variables in the table, but I was having a lot of trouble working with the code to make print a character or vector. 
 
@@ -146,17 +146,16 @@ m <- lm(data = data, log_longevity ~ log_brain_size)
 ci <- predict(m, newdata = data.frame(longevity = data$longevity), interval = "confidence",
     level = 0.95) #making a 95% CI
 ci
-df <- data.frame()
-df <- cbind(x, y, ci) #binding our x value with CI
+df <- data.frame(cbind(x, y, ci)) #binding our x value with CI
 names(df) <- c("x", "y", "CIfit", "CIlwr", "CIupr")
 head(df)
 library(ggplot2) 
-g <- ggplot(data = df, aes(x = log_longevity, y = log_brain_size))
+g <- ggplot(data = df, aes(x = x, y = y))
 g <- g + geom_point()
 g <- g + geom_smooth(method = "lm", formula = y ~ x)
-g <- g + geom_line(aes(x = log.longevity, y = CIfit), colour = "black") #This is from module 12 but it's not working
-g <- g + geom_line(aes(x = log.longevity, y = CIlwr), colour = "blue")
-g <- g + geom_line(aes(x = log.longevity, y = CIupr), colour = "blue")
+g <- g + geom_line(aes(x = x, y = CIfit), colour = "black") #This is from module 12 but it's not working
+g <- g + geom_line(aes(x = x, y = CIlwr), colour = "blue")
+g <- g + geom_line(aes(x = x, y = CIupr), colour = "blue")
 g
 ```
 
