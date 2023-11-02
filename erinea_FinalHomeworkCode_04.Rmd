@@ -164,7 +164,7 @@ g
 beta1 <- cor(longevity, brain_size) * (sd(brain_size)/sd(brain_size))
 beta1
 ```
-I don't know why this gives me an NA result
+I'm still not sure where to remove the NAs as I can't seem to do it in here
 
 ```{r 8, include=TRUE}
 library(ggplot2)
