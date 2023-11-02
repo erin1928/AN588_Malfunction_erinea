@@ -1,0 +1,200 @@
+---
+title: "Malfunction"
+author: "Erin Anderson"
+date: "`r Sys.Date()`"
+output: html_document
+---
+---
+title: "erinea_OriginalHomeworkCode_04"
+author: "Erin Anderson"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Challenges: 
+
+[1] I had a lot of trouble understanding the prop.test code. There was a lot of information within the test code and I am having a very hard time discerning what all of it means/how it all fits together, as well as picking apart which parts of the code I need to work with and which parts I can discard. My peers were also confused by this assignment and none of us were really able to crack it.
+
+[2] I am having difficulty with the confidence intervals. I was using the code from Module 12, but it's not running effectively when I try and input it into my figure. I'm not sure what exactly is leading to this problem and could use any and all help and suggestions. I also still had issues with this, my code from Module 12 wasn't synthesizing very well and I'm not sure why it wasn't running properly.
+
+[3] The beta test is also giving me a lot of difficulty. My code is returning an NA result and I'm not really sure why or how to interpret this. Reese told me it was because there were non-numeric variables in the table, but I was having a lot of trouble working with the code to make print a character or vector. 
+
+[4] Overall I think my peers and I struggled with this assignment. I appreciated the feedback and encouragment but I still really struggled with the tasks at hand. I tried my best both through the modules and online, and feel like I better understand ggplot because of it. I am going to go back through the answer key and see if I can work through it after being given some guidance.
+
+---
+
+[1] Write a simple R function, Z.prop.test(), that can perform one- or two-sample Z-tests for proportion data, using the following guidelines:
+
+```{r 1, include=TRUE}
+p1 <- 0.5 #random
+n1 <- 100 #random
+p2 <- NULL
+n2 <- NULL
+p0 <- 0.75 #random
+data.frame <- rnorm(100, mean = 50, sd = 5)
+data.frame.2 <- rnorm(50, mean = 10, sd = 1)
+```
+I tried to make a data frame but I don't know if this is necessary/how I would use this to test my z.prop test. 
+
+Question 1:
+```{r 2, include=TRUE}
+z.prop.test <- function (p1, p2 = NULL, alternative = "two.sided", mu = 0, sigma.x = NULL, 
+    sigma.y = NULL, conf.level = 0.95) 
+{
+    choices <- c("two.sided", "greater", "less")
+    alt <- pmatch(alternative, choices)
+    alternative <- choices[alt]
+    if (length(alternative) > 1 || is.na(alternative)) 
+        stop("alternative must be one \"greater\", \"less\", \"two.sided\"")
+    if (!missing(mu)) 
+        if (length(mu) != 1 || is.na(mu)) 
+            stop("mu must be a single number")
+    if (is.null(sigma.x) && !is.null(p1) && is.null(p2)) 
+        stop("You must enter the value for sigma.x")
+    if (!is.null(p2) && is.null(sigma.y) || is.null(sigma.x)) 
+        stop("You must enter values for both sigma.x and sigma.y")
+    if (!missing(conf.level)) 
+        if (length(conf.level) != 1 || is.na(conf.level) || conf.level < 
+            0 || conf.level > 1) 
+            stop("conf.level must be a number between 0 and 1")
+    if (!is.null(p2)) {
+        dname <- paste(deparse(substitute(x)), "and", paste(deparse(substitute(p1))))
+    }
+    else {
+        dname <- deparse(substitute(x))
+    }
+    xok <- !is.na(p1)
+    x <- x[xok]
+    nx <- length(p1)
+    if (nx <= 2) 
+        stop("not enough x observations")
+    mx <- mean(p1)
+    estimate <- mx
+    if (is.null(p2)) {
+        stderr <- sigma.x/sqrt(nx)
+        zobs <- (mx - mu)/stderr
+        method <- c("One-sample z-Test")
+        names(estimate) <- c("mean of x")
+    }
+    else {
+        yok <- !is.na(p2)
+        y <- p2[yok]
+        ny <- length(y)
+        if (ny <= 2) 
+            stop("not enough y observations")
+        my <- mean(y)
+        method <- c("Two-sample z-Test")
+        estimate <- c(mx, my)
+        names(estimate) <- c("mean of x", "mean of y")
+        stderr <- sqrt(((sigma.x^2)/nx) + ((sigma.y^2)/ny))
+        zobs <- (mx - my - mu)/stderr
+    }
+    if (alternative == "less") {
+        pval <- pnorm(zobs)
+        cint <- c(NA, zobs * stderr + qnorm(conf.level) * stderr)
+    }
+    else if (alternative == "greater") {
+        pval <- 1 - pnorm(zobs)
+        cint <- c(zobs * stderr - qnorm(conf.level) * stderr, 
+            NA)
+    }
+    else {
+        pval <- 2 * pnorm(-abs(zobs))
+        alpha <- 1 - conf.level
+        cint <- c(zobs * stderr - qnorm((1 - alpha/2)) * stderr, 
+            zobs * stderr + qnorm((1 - alpha/2)) * stderr)
+    }
+    cint <- cint + mu
+    names(zobs) <- "z"
+    if (!is.null(y)) 
+        names(mu) <- "difference in means"
+    else names(mu) <- "mean"
+    attr(cint, "conf.level") <- conf.level
+    rval <- list(statistic = zobs, p.value = pval, conf.int = cint, 
+        estimate = estimate, null.value = mu, alternative = alternative, 
+        method = method, data.name = dname)
+    attr(rval, "class") <- "htest"
+    return(rval)
+}
+```
+
+```{r 3, include=TRUE}
+z.prop.test(x = c(p1, p2), y = NULL, alternative = "two.sided", mu = 0, sigma.x = NULL, 
+    sigma.y = NULL, conf.level = 0.95)
+```
+
+
+Question 2:
+
+Loading csv into R and calling the necessary columns.
+```{r 4, include=TRUE}
+data <- read.csv("KamilarAndCooperData.csv", sep = ",", header = TRUE, stringsAsFactors = FALSE) #importing the csv
+data
+longevity <- data$MaxLongevity_m #calling the column
+brain_size <- data$Brain_Size_Species_Mean
+my_coef <- coef(m)            # Extract coefficients of model
+my_coef 
+my_equation <- paste("y =",        # Extract equation of model
+                     coef(m)[[1]],
+                     "+",
+                     coef(m)[[2]],
+                     "* x")
+my_equation 
+library(ggplot2)
+library(ggpubr)
+y <- brain_size - mean(brain_size) #assigning our function to a variable per the module
+x <- longevity - mean(longevity)
+z <- data.frame(cbind(x, y)) #now creating the dataframe
+g <- ggplot(data = data, aes(x = longevity, y = brain_size)) #creating the graph
+g <- g + geom_point()
+g <- g + geom_smooth(method = "lm", formula = y ~ x) + stat_regline_equation(label.x=30, label.y=310) + stat_cor(aes(label=..rr.label..), label.x=30, label.y=290)
+
+g
+```
+
+
+Okay here again we are going to make another plot using the same method, but treating our variables with the log function in order to plot the logs of each data set.
+```{r 5, include=TRUE}
+log_longevity <- log(longevity)
+log_brain_size <- log(brain_size)
+m <- lm(data = data, log_longevity ~ log_brain_size)
+ci <- predict(m, newdata = data.frame(longevity = data$longevity), interval = "confidence",
+    level = 0.95) #making a 95% CI
+ci
+df <- cbind(x, ci) #binding our x value with CI
+names(df) <- c("x", "y", "yhat", "CIfit", "CIlwr", "CIupr")
+head(df)
+library(ggplot2) 
+g <- ggplot(data = data, aes(x = log_longevity, y = log_brain_size))
+g <- g + geom_point()
+g <- g + geom_smooth(method = "lm", formula = y ~ x)
+g
+
+```
+
+I'm not sure how to append this using geom_text()
+
+```{r 7, include=TRUE}
+beta1 <- cor(longevity, brain_size) * (sd(brain_size)/sd(brain_size))
+beta1
+```
+I don't know why this gives me an NA result
+
+```{r 8, include=TRUE}
+library(ggplot2)
+slope.test <- function(beta1) {
+    g <- ggplot(data = data, aes(x = longevity, y = brain_size))
+    g <- g + geom_point()
+    g <- g + geom_abline(intercept = 0, slope = beta1, size = 1, colour = "blue",
+        alpha = 1/2)
+    ols <- sum((y - beta1 * x)^2)
+    g <- g + ggtitle(paste("Slope = ", beta1, "\nSum of Squared Deviations = ",
+        round(ols, 3)))
+    g
+}
+slope.test(my_equation)
+```
+
